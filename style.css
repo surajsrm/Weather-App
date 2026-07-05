@@ -1,0 +1,331 @@
+/* ==========================================================================
+   WEATHER APP - CUSTOM STYLES
+   Structure:
+   1. Root variables (light & dark theme)
+   2. Global / body styles
+   3. Theme toggle button
+   4. Glass card
+   5. Search bar
+   6. Loader
+   7. Error box
+   8. Weather result (city, temp, details grid)
+   9. Animations
+   10. Responsive tweaks
+   ========================================================================== */
+
+/* ---------- 1. ROOT VARIABLES ---------- */
+:root {
+  /* Light theme (default) */
+  --bg-gradient-start: #74ebd5;
+  --bg-gradient-end: #9face6;
+  --card-bg: rgba(255, 255, 255, 0.25);
+  --card-border: rgba(255, 255, 255, 0.4);
+  --text-primary: #1b1b2f;
+  --text-secondary: #3a3a52;
+  --detail-card-bg: rgba(255, 255, 255, 0.35);
+  --shadow-color: rgba(31, 38, 135, 0.25);
+  --accent-color: #4361ee;
+  --accent-hover: #3249c4;
+}
+
+/* Dark theme overrides — applied when <body> has class "dark-theme" */
+body.dark-theme {
+  --bg-gradient-start: #0f0c29;
+  --bg-gradient-end: #302b63;
+  --card-bg: rgba(20, 20, 35, 0.45);
+  --card-border: rgba(255, 255, 255, 0.15);
+  --text-primary: #f1f1f1;
+  --text-secondary: #cfcfe8;
+  --detail-card-bg: rgba(255, 255, 255, 0.08);
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --accent-color: #7b9aff;
+  --accent-hover: #5c7cff;
+}
+
+/* ---------- 2. GLOBAL / BODY STYLES ---------- */
+* {
+  transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease;
+}
+
+body {
+  min-height: 100vh;
+  font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+  background-attachment: fixed;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.app-wrapper {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+}
+
+/* ---------- 3. THEME TOGGLE BUTTON ---------- */
+.theme-toggle-btn {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.theme-toggle-btn:hover {
+  transform: scale(1.1) rotate(15deg);
+}
+
+/* ---------- 4. GLASS CARD ---------- */
+.glass-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 24px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 32px var(--shadow-color);
+  animation: fadeInUp 0.6s ease;
+}
+
+.app-title {
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--text-primary);
+}
+
+.app-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 0;
+}
+
+.footer-text {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+/* ---------- 5. SEARCH BAR ---------- */
+.search-group .form-control {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--card-border);
+  color: #1b1b2f;
+  border-radius: 12px 0 0 12px;
+  padding: 0.65rem 1rem;
+}
+
+body.dark-theme .search-group .form-control {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-primary);
+}
+
+.search-group .form-control::placeholder {
+  color: #555;
+}
+
+body.dark-theme .search-group .form-control::placeholder {
+  color: #aaa;
+}
+
+.search-group .form-control:focus {
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.25);
+  border-color: var(--accent-color);
+}
+
+.btn-search {
+  background: var(--accent-color);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+  padding: 0.65rem 1.2rem;
+}
+
+.btn-search:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-location {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--card-border);
+  color: var(--text-primary);
+  border-radius: 0 12px 12px 0 !important;
+}
+
+.btn-location:hover {
+  background: rgba(255, 255, 255, 0.6);
+  transform: translateY(-1px);
+}
+
+/* ---------- 6. LOADER ---------- */
+.loader-spinner {
+  color: var(--accent-color);
+  width: 3rem;
+  height: 3rem;
+}
+
+/* ---------- 7. ERROR BOX ---------- */
+.error-box {
+  background: rgba(255, 99, 99, 0.15);
+  border: 1px solid rgba(255, 99, 99, 0.4);
+  border-radius: 14px;
+  padding: 1.5rem;
+  color: #b3261e;
+  animation: shake 0.4s ease;
+}
+
+body.dark-theme .error-box {
+  color: #ff9d9d;
+}
+
+.error-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* ---------- 8. WEATHER RESULT ---------- */
+.date-time-text {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.city-name {
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.country-badge {
+  background: var(--accent-color);
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+  padding: 0.4rem 0.8rem;
+}
+
+.main-weather-block {
+  animation: fadeIn 0.6s ease;
+}
+
+.weather-icon-main {
+  width: 110px;
+  height: 110px;
+  filter: drop-shadow(0 6px 10px var(--shadow-color));
+  animation: floatIcon 3s ease-in-out infinite;
+}
+
+.temperature-text {
+  font-size: 3.2rem;
+  font-weight: 700;
+  margin-bottom: 0;
+  color: var(--text-primary);
+}
+
+.weather-condition {
+  font-size: 1.1rem;
+  text-transform: capitalize;
+  color: var(--text-secondary);
+  margin-bottom: 0.2rem;
+}
+
+.feels-like-text {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 0;
+}
+
+/* Details grid cards */
+.detail-card {
+  background: var(--detail-card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  height: 100%;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.detail-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px var(--shadow-color);
+}
+
+.detail-icon {
+  font-size: 1.5rem;
+  color: var(--accent-color);
+  margin-bottom: 0.4rem;
+  display: block;
+}
+
+.detail-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.detail-value {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* ---------- 9. ANIMATIONS ---------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+/* ---------- 10. RESPONSIVE TWEAKS ---------- */
+@media (max-width: 576px) {
+  .app-title {
+    font-size: 1.5rem;
+  }
+
+  .temperature-text {
+    font-size: 2.4rem;
+  }
+
+  .weather-icon-main {
+    width: 90px;
+    height: 90px;
+  }
+
+  .search-group {
+    flex-wrap: nowrap;
+  }
+
+  .btn-search span {
+    display: none; /* keep icon only on very small screens if needed */
+  }
+}
