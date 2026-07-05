@@ -1,34 +1,8 @@
-/* ==========================================================================
-   WEATHER APP - script.js
-   --------------------------------------------------------------------------
-   This file contains ALL the JavaScript logic for the app:
-   1. Configuration (API key & URLs)
-   2. DOM element references
-   3. Helper functions (loader, error, date/time)
-   4. Core functions: getWeather(), displayWeather()
-   5. Event listeners (search button, Enter key, location button, theme toggle)
-   6. LocalStorage (remember last city) + Geolocation (auto weather) on load
-   ========================================================================== */
+const API_KEY = "fcc8de7015bbb202209bbf0261babf4c"; 
 
-/* -----------------------------------------------------------------------
-   1. CONFIGURATION
-   -----------------------------------------------------------------------
-   Sign up for a free account at https://openweathermap.org/api
-   to get your own API key, then paste it below.
-   NOTE: Never commit real API keys to public repositories.
------------------------------------------------------------------------- */
-const API_KEY = "fcc8de7015bbb202209bbf0261babf4c"; // <-- Replace with your OpenWeatherMap API key
-
-// Base URLs for OpenWeatherMap's "Current Weather Data" endpoint
 const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
 
-/* -----------------------------------------------------------------------
-   2. DOM ELEMENT REFERENCES
-   -----------------------------------------------------------------------
-   We grab all the elements we'll need to read from / write to, once,
-   and store them in constants. This avoids repeated document.getElementById
-   calls and keeps the code fast and readable.
------------------------------------------------------------------------- */
+
 const cityInput      = document.getElementById("cityInput");
 const searchBtn       = document.getElementById("searchBtn");
 const locationBtn     = document.getElementById("locationBtn");
@@ -59,44 +33,25 @@ const themeIcon        = document.getElementById("themeIcon");
    3. HELPER FUNCTIONS
 ------------------------------------------------------------------------ */
 
-/**
- * showLoader()
- * Displays the spinner and hides both the error box and the weather result,
- * so the user only ever sees ONE state on screen at a time.
- */
 function showLoader() {
   loader.classList.remove("d-none");
   errorBox.classList.add("d-none");
   weatherResult.classList.add("d-none");
 }
 
-/**
- * hideLoader()
- * Hides the spinner once the fetch request has finished (success or fail).
- */
+
 function hideLoader() {
   loader.classList.add("d-none");
 }
 
-/**
- * showError(message)
- * Displays a friendly error message inside the styled error box
- * and makes sure the weather result section is hidden.
- * @param {string} message - the text to show the user
- */
+
 function showError(message) {
   errorMessage.textContent = message;
   errorBox.classList.remove("d-none");
   weatherResult.classList.add("d-none");
 }
 
-/**
- * formatDateTime(date)
- * Formats a JS Date object into a readable string like:
- * "Saturday, 4 July 2026, 10:45 AM"
- * @param {Date} date
- * @returns {string}
- */
+
 function formatDateTime(date) {
   const options = {
     weekday: "long",
@@ -109,15 +64,7 @@ function formatDateTime(date) {
   return date.toLocaleDateString("en-US", options);
 }
 
-/**
- * formatUnixTime(unixSeconds, timezoneOffsetSeconds)
- * OpenWeatherMap returns sunrise/sunset as UNIX timestamps (UTC) plus
- * a timezone offset for the city. We convert this into a local time string
- * like "05:42 AM" for that city (not the user's own timezone).
- * @param {number} unixSeconds
- * @param {number} timezoneOffsetSeconds
- * @returns {string}
- */
+
 function formatUnixTime(unixSeconds, timezoneOffsetSeconds) {
   // Convert to milliseconds and shift by the city's timezone offset
   const localMillis = (unixSeconds + timezoneOffsetSeconds) * 1000;
@@ -130,17 +77,7 @@ function formatUnixTime(unixSeconds, timezoneOffsetSeconds) {
   return `${hours}:${minutes} ${ampm}`;
 }
 
-/* -----------------------------------------------------------------------
-   4. CORE FUNCTIONS
------------------------------------------------------------------------- */
 
-/**
- * getWeather(city)
- * Fetches current weather data for a given city name from the
- * OpenWeatherMap API using async/await + fetch, then either displays
- * the result or shows an error.
- * @param {string} city - the city name typed by the user
- */
 async function getWeather(city) {
   // Guard: don't search for an empty string
   if (!city || city.trim() === "") {
@@ -183,13 +120,7 @@ async function getWeather(city) {
   }
 }
 
-/**
- * getWeatherByCoords(lat, lon)
- * Same idea as getWeather(), but queries by latitude/longitude instead
- * of a city name. Used by the Geolocation ("use my location") feature.
- * @param {number} lat
- * @param {number} lon
- */
+
 async function getWeatherByCoords(lat, lon) {
   showLoader();
 
@@ -217,12 +148,7 @@ async function getWeatherByCoords(lat, lon) {
   }
 }
 
-/**
- * displayWeather(data)
- * Takes the JSON response from OpenWeatherMap and injects all the
- * relevant values into the page's DOM elements.
- * @param {Object} data - the parsed JSON weather data
- */
+
 function displayWeather(data) {
   // --- Date & time (user's local device time, shown at the top) ---
   dateTimeEl.textContent = formatDateTime(new Date());
@@ -255,9 +181,6 @@ function displayWeather(data) {
   errorBox.classList.add("d-none");
 }
 
-/* -----------------------------------------------------------------------
-   5. EVENT LISTENERS
------------------------------------------------------------------------- */
 
 // Search button click
 searchBtn.addEventListener("click", () => {
@@ -291,13 +214,7 @@ locationBtn.addEventListener("click", () => {
   );
 });
 
-/* -----------------------------------------------------------------------
-   6. THEME TOGGLE (Light / Dark mode)
-   -----------------------------------------------------------------------
-   We toggle a "dark-theme" class on <body>. All the actual color values
-   live in CSS custom properties (see :root and body.dark-theme in style.css),
-   so JavaScript only needs to flip one class and swap the icon.
------------------------------------------------------------------------- */
+
 function applyTheme(theme) {
   if (theme === "dark") {
     document.body.classList.add("dark-theme");
@@ -314,13 +231,7 @@ themeToggleBtn.addEventListener("click", () => {
   applyTheme(isDark ? "light" : "dark");
 });
 
-/* -----------------------------------------------------------------------
-   7. ON PAGE LOAD
-   -----------------------------------------------------------------------
-   - Restore the saved theme (light/dark) from localStorage.
-   - Try to load the last searched city from localStorage.
-   - If there's no saved city, try Geolocation to auto-detect weather.
------------------------------------------------------------------------- */
+
 window.addEventListener("DOMContentLoaded", () => {
   // Restore theme preference
   const savedTheme = localStorage.getItem("theme") || "light";
