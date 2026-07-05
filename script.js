@@ -29,9 +29,6 @@ const sunsetEl         = document.getElementById("sunset");
 const themeToggleBtn   = document.getElementById("themeToggleBtn");
 const themeIcon        = document.getElementById("themeIcon");
 
-/* -----------------------------------------------------------------------
-   3. HELPER FUNCTIONS
------------------------------------------------------------------------- */
 
 function showLoader() {
   loader.classList.remove("d-none");
@@ -66,10 +63,10 @@ function formatDateTime(date) {
 
 
 function formatUnixTime(unixSeconds, timezoneOffsetSeconds) {
-  // Convert to milliseconds and shift by the city's timezone offset
+  
   const localMillis = (unixSeconds + timezoneOffsetSeconds) * 1000;
   const date = new Date(localMillis);
-  // Use UTC getters because we've already manually shifted the time
+  
   let hours = date.getUTCHours();
   const minutes = date.getUTCMinutes().toString().padStart(2, "0");
   const ampm = hours >= 12 ? "PM" : "AM";
@@ -79,7 +76,7 @@ function formatUnixTime(unixSeconds, timezoneOffsetSeconds) {
 
 
 async function getWeather(city) {
-  // Guard: don't search for an empty string
+  
   if (!city || city.trim() === "") {
     showError("Please enter a city name.");
     return;
@@ -88,13 +85,10 @@ async function getWeather(city) {
   showLoader();
 
   try {
-    // Build the request URL: metric units gives temperature in °C
     const url = `${BASE_URL}?q=${encodeURIComponent(city)}&units=metric&appid=${API_KEY}`;
 
     const response = await fetch(url);
 
-    // OpenWeatherMap returns HTTP 404 when the city isn't found,
-    // and 401 when the API key is missing/invalid.
     if (!response.ok) {
       if (response.status === 404) {
         throw new Error("City not found. Please check the spelling and try again.");
@@ -107,15 +101,12 @@ async function getWeather(city) {
 
     const data = await response.json();
 
-    // Success! Render the data and remember this city for next visit.
     displayWeather(data);
     localStorage.setItem("lastCity", city);
 
   } catch (error) {
-    // Network errors (e.g. no internet) also land here
     showError(error.message || "Unable to fetch weather data. Please try again.");
   } finally {
-    // Always hide the loader, whether the request succeeded or failed
     hideLoader();
   }
 }
@@ -135,7 +126,6 @@ async function getWeatherByCoords(lat, lon) {
     const data = await response.json();
     displayWeather(data);
 
-    // Update the search box and localStorage with the resolved city name
     if (data.name) {
       cityInput.value = data.name;
       localStorage.setItem("lastCity", data.name);
@@ -150,14 +140,12 @@ async function getWeatherByCoords(lat, lon) {
 
 
 function displayWeather(data) {
-  // --- Date & time (user's local device time, shown at the top) ---
+
   dateTimeEl.textContent = formatDateTime(new Date());
 
-  // --- City & country ---
   cityNameEl.textContent = data.name;
   countryNameEl.textContent = data.sys.country;
 
-  // --- Main temperature + icon + condition ---
   const iconCode = data.weather[0].icon;
   weatherIconEl.src = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
   weatherIconEl.alt = data.weather[0].description;
@@ -166,35 +154,29 @@ function displayWeather(data) {
   weatherConditionEl.textContent = data.weather[0].description;
   feelsLikeEl.textContent = `Feels like ${Math.round(data.main.feels_like)}°C`;
 
-  // --- Details grid ---
   humidityEl.textContent = `${data.main.humidity}%`;
   windSpeedEl.textContent = `${data.wind.speed} m/s`;
   pressureEl.textContent = `${data.main.pressure} hPa`;
   feelsLikeCardEl.textContent = `${Math.round(data.main.feels_like)}°C`;
 
-  // --- Sunrise / sunset (converted using the city's own timezone offset) ---
   sunriseEl.textContent = formatUnixTime(data.sys.sunrise, data.timezone);
   sunsetEl.textContent = formatUnixTime(data.sys.sunset, data.timezone);
 
-  // Reveal the result section and make sure error/loader are hidden
   weatherResult.classList.remove("d-none");
   errorBox.classList.add("d-none");
 }
 
 
-// Search button click
 searchBtn.addEventListener("click", () => {
   getWeather(cityInput.value.trim());
 });
 
-// Pressing "Enter" inside the input field also triggers a search
 cityInput.addEventListener("keyup", (event) => {
   if (event.key === "Enter") {
     getWeather(cityInput.value.trim());
   }
 });
 
-// "Use my location" button - asks for Geolocation permission
 locationBtn.addEventListener("click", () => {
   if (!navigator.geolocation) {
     showError("Geolocation is not supported by your browser.");
@@ -233,27 +215,23 @@ themeToggleBtn.addEventListener("click", () => {
 
 
 window.addEventListener("DOMContentLoaded", () => {
-  // Restore theme preference
   const savedTheme = localStorage.getItem("theme") || "light";
   applyTheme(savedTheme);
 
-  // Restore last searched city, if any
   const lastCity = localStorage.getItem("lastCity");
 
   if (lastCity) {
     cityInput.value = lastCity;
     getWeather(lastCity);
   } else if (navigator.geolocation) {
-    // No saved city — try to auto-detect weather via Geolocation
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
         getWeatherByCoords(latitude, longitude);
       },
       () => {
-        // Permission denied or unavailable — that's fine, just wait
-        // for the user to search manually. No error shown here since
-        // this is a silent, optional convenience feature.
+        
       }
     );
   }
