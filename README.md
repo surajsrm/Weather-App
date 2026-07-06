@@ -1,6 +1,6 @@
 # 🌤️ Weather App
 
-A modern, fully responsive weather application built with **HTML, CSS, Bootstrap 5, and Vanilla JavaScript** — no frameworks, no backend. It fetches real-time weather data from the **OpenWeatherMap API** and displays it in a clean glassmorphism-style UI.
+A modern, fully responsive weather application built with **HTML, CSS, Bootstrap 5, and JavaScript** — no frameworks, no backend. It fetches real-time weather data from the **OpenWeatherMap API** and displays it in a clean glassmorphism-style UI.
 
 ![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 ![CSS](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
@@ -32,7 +32,7 @@ A modern, fully responsive weather application built with **HTML, CSS, Bootstrap
 |------------|--------------------------------------|
 | Structure  | HTML5                                |
 | Styling    | CSS3, Bootstrap 5, Bootstrap Icons   |
-| Logic      | Vanilla JavaScript (Fetch API, async/await) |
+| Logic      | JavaScript (Fetch API, async/await) |
 | Data       | OpenWeatherMap REST API              |
 | Storage    | Browser LocalStorage                 |
 
